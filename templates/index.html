@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatGPT Demo</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body {
+            background: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: normal;
+            color: #333;
+            margin: 20px 0;
+        }
+        .user-message {
+            white-space : pre;
+            color:#ffffff;
+            border-radius: 5px;
+        }
+        .bot-message {
+            border-radius: 5px;
+        }
+        .container0 {
+            width: 50%;
+            margin: 0 auto;
+            background: #8584ea;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        .container form {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .container form > * {
+            flex-basis: 100%;
+            margin: 10px 0;
+        }
+        .container label {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .container input[type=text] {
+            border-radius: 5px;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        .container input[type=submit], .container input[type=reset] {
+            background: #8584ea;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-right: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .container input[type=submit]:hover, .container input[type=reset]:hover {
+            background: #6c69e8;
+        }
+        
+        t {
+            white-space: pre-wrap;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>ChatGPT - Murphy</h1>
+    
+        <div id="messages">
+        </div>
+    
+    <h1></h1>
+    <div class="container">
+        <form id="user-form">
+            <div>
+                <label>请输入内容：</label>
+                <h1></h1>
+                <input type="text" id="input" placeholder="在此输入...">
+                <t>        </t>
+                <input type="submit" value="提交">
+            </div>
+            <div>
+                <input type="reset" id="reset-button" value="清空">
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function() {
+            $('#user-form').submit(function(event) {
+                event.preventDefault();
+                var user_input = $('#input').val();
+                $('#messages').append('<h1></h1><div class="container0"><div class="message user-message">You:\n\n'+user_input +'</div><h1></h1>');
+                $.ajax({
+                    type: 'POST',
+                    url: '/get_response',
+                    data: { user_input: user_input },
+                    success: function(response) {
+                        $('#messages').append('<h1></h1><div class="container"><div class="message bot-message"> ChatGPT:'+ response +'</div><h1></h1>');
+
+                        $('#messages').animate({ scrollTop: $('#messages').prop("scrollHeight") }, 1000);
+                        $('pre code').each(function(i, block) {
+                            hljs.highlightBlock(block);
+                        });
+                    }
+                });
+                $('#input').val('');
+            });
+            $('#reset-button').click(function() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/reset',
+                    success: function(response) {
+                        $('#messages').empty();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
