@@ -11,7 +11,7 @@ from datetime import datetime
 
 model_name = "gpt-3.5-turbo"
 encoding = tiktoken.encoding_for_model(model_name)
-openai.api_key = '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'
+openai.api_key = 'sk-xxx'
 app = Flask(__name__)
 messages = {}
 
