@@ -2,8 +2,10 @@
 <html>
 <head>
     <title>ChatGPT Demo</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script src="https://unpkg.com/autosize/dist/autosize.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <style type="text/css">
         body {
@@ -25,7 +27,7 @@
             color:#696868;
         }
         .user-message {
-            white-space : pre;
+            word-wrap:break-word;
             color:#ffffff;
             border-radius: 5px;
         }
@@ -94,6 +96,15 @@
             white-space: pre-wrap;
             color: red;
         }
+        textarea {
+        width: 98%; /* textarea宽度占满父元素容器 */
+        padding: 1rem; /* 模拟padding为8px的效果 */
+        line-height: 1.5; /* 设置行高 */
+        resize: none; /* 禁止拖拽改变大小 */
+        overflow: hidden; /* 当内容超出文本框边界时隐藏 */
+        border: 1px solid #ccc; /* 边框 */
+        border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -108,12 +119,9 @@
         <form id="user-form">
             <div>
                 <label>请输入内容：</label>
+                <textarea id="input" placeholder="在此输入..." oninput="autoHeight(this)"></textarea>
                 <h1></h1>
-                <input type="text" id="input" placeholder="在此输入...">
-                <t>        </t>
                 <input type="submit" value="提交">
-            </div>
-            <div>
                 <input type="reset" id="reset-button" value="清空">
             </div>
         </form>
@@ -151,6 +159,12 @@
                 });
             });
         });
+    </script>
+    <script>
+        function autoHeight(element) {
+        element.style.height = 'auto'; // 把高度设置为auto，以便计算正确的文本框高度
+        element.style.height = element.scrollHeight + 'px'; // 设置新的文本框高度
+        }
     </script>
 </body>
 </html>
